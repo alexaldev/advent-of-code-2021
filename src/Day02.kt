@@ -1,47 +1,41 @@
-import java.lang.IllegalArgumentException
-
 fun main() {
+
     fun part1(input: List<String>): Int {
 
-        var forward = 0
-        var depth = 0
+        val position = SubmarinePosition(0, 0)
 
         for (s in input) {
-            val (command, value) = s.split(' ')
-            when(command){
-                "forward" -> forward += value.toInt()
-                "up" -> depth -= value.toInt()
-                "down" -> depth += value.toInt()
+
+            val commandAndValue = CommandWithValue.parse(s)
+            when (commandAndValue.command) {
+                Command.FORWARD -> position.horizontal += commandAndValue.value
+                Command.DOWN -> position.depth += commandAndValue.value
+                Command.UP -> position.depth -= commandAndValue.value
             }
         }
 
-        println(forward * depth)
-        return forward * depth
+        return position.depth * position.horizontal
     }
 
     fun part2(input: List<String>): Int {
 
-        var forward = 0
-        var depth = 0
-        var aim = 0
+        val position = SubmarinePosition(0, 0)
 
         for (s in input) {
-            val (command, value) = s.split(' ')
-            when(command){
-                "forward" ->  {
-                    forward += value.toInt()
-                    depth += aim * value.toInt()
+            val commandAndValue = CommandWithValue.parse(s)
+            when (commandAndValue.command) {
+                Command.FORWARD -> {
+                    position.horizontal += commandAndValue.value
+                    position.depth += position.aim * commandAndValue.value
                 }
-                "up" -> aim -= value.toInt()
-                "down" -> aim += value.toInt()
+                Command.DOWN -> position.aim += commandAndValue.value
+                Command.UP -> position.aim -= commandAndValue.value
             }
         }
 
-        println(forward * depth)
-        return forward * depth
+        return position.depth * position.horizontal
     }
 
-    // test if implementation meets criteria from the description, like:
     val testInputPart1 = readInput("Day02_test")
     check(part1(testInputPart1) == 150)
 
@@ -53,15 +47,39 @@ fun main() {
     println(part2(input))
 }
 
+data class SubmarinePosition(
+    var horizontal: Int = 0,
+    var depth: Int = 0,
+    var aim: Int = 0
+)
+
+data class CommandWithValue(
+    val command: Command,
+    val value: Int
+) {
+
+    companion object {
+        fun parse(line: String): CommandWithValue {
+
+            val (c, v) = line.split(' ')
+            val command = Command.parse(c)
+            val value = v.toInt()
+            return CommandWithValue(command, value)
+        }
+    }
+}
+
 enum class Command {
     FORWARD, UP, DOWN;
 
-    fun parse(s: String): Command {
-        return when (s) {
-            "forward" -> FORWARD
-            "up" -> UP
-            "down" -> DOWN
-            else -> throw IllegalArgumentException("Invald input")
+    companion object {
+        fun parse(s: String): Command {
+            return when (s) {
+                "forward" -> FORWARD
+                "up" -> UP
+                "down" -> DOWN
+                else -> throw IllegalArgumentException("Invalid argument.")
+            }
         }
     }
 }
