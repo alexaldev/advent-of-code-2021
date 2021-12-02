@@ -1,7 +1,7 @@
-fun main() {
+package per_day
 
-    fun part1(input: List<String>): Int {
-
+class Day02 : Day() {
+    override fun firstPart(input: List<String>): Int {
         val position = SubmarinePosition(0, 0)
 
         for (s in input) {
@@ -17,8 +17,7 @@ fun main() {
         return position.depth * position.horizontal
     }
 
-    fun part2(input: List<String>): Int {
-
+    override fun secondPart(input: List<String>): Int {
         val position = SubmarinePosition(0, 0)
 
         for (s in input) {
@@ -36,15 +35,9 @@ fun main() {
         return position.depth * position.horizontal
     }
 
-    val testInputPart1 = readInput("Day02_test")
-    check(part1(testInputPart1) == 150)
-
-    val testInputPart2 = readInput("Day02_test")
-    check(part2(testInputPart2) == 900)
-
-    val input = readInput("Day02")
-    println(part1(input))
-    println(part2(input))
+    override fun part1TestExpectedResult() = 150
+    override fun part2TestExpectedResult() = 900
+    override fun part1And2SeparateExplanations() = false
 }
 
 data class SubmarinePosition(
@@ -60,11 +53,9 @@ data class CommandWithValue(
 
     companion object {
         fun parse(line: String): CommandWithValue {
-
-            val (c, v) = line.split(' ')
-            val command = Command.parse(c)
-            val value = v.toInt()
-            return CommandWithValue(command, value)
+            with(line.split(' ').take(2)) {
+                return CommandWithValue(Command.parse(this[0]), this[1].toInt())
+            }
         }
     }
 }
