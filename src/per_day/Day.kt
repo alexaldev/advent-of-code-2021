@@ -39,6 +39,6 @@ abstract class Day {
         println("Explanation example of part 2 passed!")
 
         // Run on the given input
-        println("Input result: ${secondPart(readInput(javaClass.simpleName))}")
+        println("Result of solution on the input: ${secondPart(readInput(javaClass.simpleName))}")
     }
 }
