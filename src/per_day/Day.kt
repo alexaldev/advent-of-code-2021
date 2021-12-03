@@ -35,7 +35,8 @@ abstract class Day {
     private fun runSecond() {
 
         val testLines = readTestInput(javaClass.simpleName, part1And2SeparateExplanations())
-        check(part2TestExpectedResult() == secondPart(testLines))
+        val testResult = secondPart(testLines)
+        check(part2TestExpectedResult() == testResult)
         println("Explanation example of part 2 passed!")
 
         // Run on the given input
