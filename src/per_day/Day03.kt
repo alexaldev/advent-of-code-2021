@@ -1,44 +1,54 @@
 package per_day
 
-fun List<List<Char>>.column(index: Int): List<Char> {
-    val result = mutableListOf<Char>()
-    this.forEach { result.add(it[index]) }
+fun List<Int>.modeOrNull(): Int? {
+    return this
+        .groupingBy { it }
+        .eachCount()
+        .maxByOrNull { it.value }?.key
+}
+
+fun List<Char>.toDigits() = this.map { it.digitToInt() }
+
+fun List<List<Char>>.swapRowsAndColumns(): List<List<Char>> {
+
+    val result: MutableList<MutableList<Char>> = MutableList(this[0].size) { MutableList(this.size) { ' ' } }
+
+    for (i in result.indices) {
+        for (j in result[i].indices) {
+            result[i][j] = this[j][i]
+        }
+    }
+
     return result
 }
 
-class Day03: Day() {
+class Day03 : Day() {
     override fun firstPart(input: List<String>): Int {
 
-        val linesByChars = input.map { it.toCharArray().toList() }
-        var g = ""
-        var e = ""
+        val columnsAsLines = input
+            .map { it.toCharArray().toList() }
+            .swapRowsAndColumns()
+            .map { it.toDigits() }
 
-        for (i in input[0].indices) {
-            val zeros = linesByChars.column(i).count { it.digitToInt() == 0 }
-            val ones = linesByChars.column(i).count { it.digitToInt() == 1 }
-            when {
-                zeros > ones -> {
-                    g += '0'
-                    e += '1'
-                }
-                else -> {
-                    g += '1'
-                    e += '0'
-                }
+        val g = columnsAsLines
+            .fold(StringBuilder()) { acc, list ->
+                val mode = list.modeOrNull()
+                acc.append(if (mode == 0) '0' else '1')
             }
-        }
 
-        return Integer.parseInt(g, 2) * Integer.parseInt(e, 2)
+        val e = columnsAsLines
+            .fold(StringBuilder()) { acc, list ->
+                val mode = list.modeOrNull()
+                acc.append(if (mode == 0) '1' else '0')
+            }
+
+        return Integer.parseInt(g.toString(), 2) * Integer.parseInt(e.toString(), 2)
     }
-
 
     override fun secondPart(input: List<String>): Int {
 
         val possibleForOx = input.toHashSet()
         val possibleForCo2 = input.toHashSet()
-
-        var foundOx = false
-        var foundCo2 = false
 
         // Find OX
         for (p in 0 until input[0].length) {
@@ -54,11 +64,6 @@ class Day03: Day() {
                     possibleForOx.addAll(keepOx)
                 }
                 zeros < ones -> {
-                    val keepOx = possibleForOx.filter { it[p] == '1' }
-                    possibleForOx.clear()
-                    possibleForOx.addAll(keepOx)
-                }
-                else -> {
                     val keepOx = possibleForOx.filter { it[p] == '1' }
                     possibleForOx.clear()
                     possibleForOx.addAll(keepOx)
@@ -82,11 +87,6 @@ class Day03: Day() {
                     possibleForCo2.addAll(keepOx)
                 }
                 zeros < ones -> {
-                    val keepOx = possibleForCo2.filter { it[p] == '0' }
-                    possibleForCo2.clear()
-                    possibleForCo2.addAll(keepOx)
-                }
-                else -> {
                     val keepOx = possibleForCo2.filter { it[p] == '0' }
                     possibleForCo2.clear()
                     possibleForCo2.addAll(keepOx)
