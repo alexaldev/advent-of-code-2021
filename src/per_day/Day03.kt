@@ -1,22 +1,30 @@
 package per_day
 
+fun List<List<Char>>.column(index: Int): List<Char> {
+    val result = mutableListOf<Char>()
+    this.forEach { result.add(it[index]) }
+    return result
+}
+
 class Day03: Day() {
     override fun firstPart(input: List<String>): Int {
-        
+
+        val linesByChars = input.map { it.toCharArray().toList() }
         var g = ""
         var e = ""
 
-        for (p in 0 until input[0].length) {
-
-            val column = input.map { it[p] }
-            val zeros = column.count { it.digitToInt() == 0 }
-            val ones = column.count { it.digitToInt() == 1 }
-            if (zeros > ones) {
-                g += '0'
-                e += '1'
-            } else {
-                g += '1'
-                e += '0'
+        for (i in input[0].indices) {
+            val zeros = linesByChars.column(i).count { it.digitToInt() == 0 }
+            val ones = linesByChars.column(i).count { it.digitToInt() == 1 }
+            when {
+                zeros > ones -> {
+                    g += '0'
+                    e += '1'
+                }
+                else -> {
+                    g += '1'
+                    e += '0'
+                }
             }
         }
 
@@ -25,8 +33,6 @@ class Day03: Day() {
 
 
     override fun secondPart(input: List<String>): Int {
-
-
 
         val possibleForOx = input.toHashSet()
         val possibleForCo2 = input.toHashSet()
