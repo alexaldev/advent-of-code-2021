@@ -1,10 +1,7 @@
-import per_day.Day
-import per_day.Day03
-import per_day.Day04
+import per_day.*
 
 fun main() {
 
-    val day: Day = Day04() // Current day
-
-    day.run(Day.Part.Both)
+    val day: Day = Day05() // Current day
+    day.run(Day.Part.First)
 }

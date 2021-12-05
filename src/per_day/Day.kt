@@ -29,7 +29,7 @@ abstract class Day {
 
     private fun runFirst() {
 
-        // Run the explanation example
+
         val testLines = readTestInput(javaClass.simpleName)
         val testResult = firstPart(testLines)
         check(part1TestExpectedResult() == testResult) {"Expected ${part1TestExpectedResult()} but was $testResult"}
