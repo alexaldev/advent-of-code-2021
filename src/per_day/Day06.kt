@@ -13,8 +13,8 @@ fun sol(input: List<String>, days: Int = 80): Long {
         Collections.rotate(lst, -1)
         lst[9] = 0
         if (toGiveBirth > 0) {
-            lst[6] = lst[6] + toGiveBirth
-            lst[8] = lst[8] + toGiveBirth
+            lst[6] += toGiveBirth
+            lst[8] += toGiveBirth
         }
     }
     return lst.sum()
